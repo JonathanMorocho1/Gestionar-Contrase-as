@@ -90,7 +90,7 @@ public class Contraseñas {
         usuarios.setUsuario(txtUsuario.getText());
         usuarios.setContraseña(txtContraseña.getText());
         usuarios.setCorreo_recuperacion(txtCorreoRecuperacion.getText());
-        usuarios.setFecha_registro(new Date());
+        usuarios.setFecha_registro(new Date());        
         System.out.println(usuarios.toString());
         //return usuarios;
         return usuarios;

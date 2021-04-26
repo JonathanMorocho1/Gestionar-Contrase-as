@@ -108,8 +108,7 @@ public class Contraseñasbd {
                "', `Usuario` = '" + usuarios.getUsuario()+ 
                "', `Contraseña` = '" + usuarios.getContraseña()+ 
                "', `Correo_de_recuperacion` = '" + usuarios.getCorreo_recuperacion()+
-               "', `fecha_registro` = '" + utilidades.devolverFecha(usuarios.getFecha_registro())+ 
-               "' WHERE (`idUsuarios` = '"+ usuarios.getIdUsuarios()+ "');";
+                "' WHERE (`idUsuarios` = '"+ usuarios.getIdUsuarios()+ "');";
         try {
             ConexionBD con = new ConexionBD();
             connect = con.ConexionBD();
@@ -143,6 +142,7 @@ public class Contraseñasbd {
                 c.setUsuario(rs.getString(4));
                 c.setContraseña(rs.getString(5));
                 c.setCorreo_recuperacion(rs.getString(6));
+                c.setFecha_registro(rs.getDate(7));
                 listaUsuarios.add(c);
             }
             stm.close();
@@ -174,6 +174,8 @@ public class Contraseñasbd {
                 c.setUsuario(rs.getString(4));
                 c.setContraseña(rs.getString(5));
                 c.setCorreo_recuperacion(rs.getString(6));
+                c.setFecha_registro(rs.getDate(7));
+
                 listaUsuarios.add(c);
             }
             stm.close();

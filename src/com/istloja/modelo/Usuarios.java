@@ -101,6 +101,6 @@ public class Usuarios {
     public String toString() {
         return "Usuarios{" + "idUsuarios=" + idUsuarios + ", NombresSitioWeb=" + NombresSitioWeb + ", DireccionWeb=" + DireccionWeb + ", Usuario=" + Usuario + ", Contrase\u00f1a=" + Contraseña + ", Correo_recuperacion=" + Correo_recuperacion + ", fecha_registro=" + fecha_registro + '}';
     }
-    
-    
+
+        
 }

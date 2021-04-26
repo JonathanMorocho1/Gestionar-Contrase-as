@@ -24,11 +24,11 @@ import javax.swing.JOptionPane;
  */
 public class GestionarContraseñas extends javax.swing.JFrame implements ComunicacionTablas{
 
-    private Utilidades utilidades;
-    private Contraseñasbd controladorUsuariosContraseña;
-    private ModelTableContraseñas modelTableContraseñas;
-    private Contraseñas contraseñasgestion;
-    private Usuarios usuariosEditar;
+    private Utilidades utilidades;//PARA PODER UTILIZAR LOS METODO QUE TENEMOS EN DICHA CLASE
+    private Contraseñasbd controladorUsuariosContraseña;//PARA PODER UTILIZAR LOS METODOS QUE SE ENVIA A MYSQL
+    private ModelTableContraseñas modelTableContraseñas;//PARA UTILIZAR EL MODELO DE LA TABLA CREADO
+    private Contraseñas contraseñasgestion;//METODO DONDE DECLARAMOS TODOS LO PARAMETROS QUE CREAMOS Y PODEMOS GIARDAR,ELIMINAR,EDITAR.
+    private Usuarios usuariosEditar;//PARA PODER TRAER LOS DATOS DEL MODELO
     
     /**
      * Creates new form NewJFrame
@@ -39,8 +39,8 @@ public class GestionarContraseñas extends javax.swing.JFrame implements Comunic
         initComponents();
         this.setLocationRelativeTo(null);
         contraseñasgestion = new Contraseñas(txtNombreSitioWeb, txtDireccionSitioWeb, txtUsuario, txtContraseña, txtCorreoRecuperacion, this);
-        txtFechaRegistro.setText(new Date().toString());
-        txtFechaRegistro.setEditable(false);
+        txtFechaRegistro.setText(new Date().toString());//SE INICIALIZA EL PROGRAMA Y YA SE ENCUENTRA LA FECHA
+        txtFechaRegistro.setEditable(false);//EL CAMPO DE LA FECHA NO PODRA SER EDITADA
     }
 
     /**
@@ -132,6 +132,11 @@ public class GestionarContraseñas extends javax.swing.JFrame implements Comunic
         });
 
         txtCorreoRecuperacion.setToolTipText("Ingrese el correo de recuperación de la contraseña");
+        txtCorreoRecuperacion.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCorreoRecuperacionFocusLost(evt);
+            }
+        });
         txtCorreoRecuperacion.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 txtCorreoRecuperacionMouseEntered(evt);
@@ -421,25 +426,32 @@ public class GestionarContraseñas extends javax.swing.JFrame implements Comunic
         EliminarUsuarios();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
-    
+    private void txtCorreoRecuperacionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCorreoRecuperacionFocusLost
+        // TODO add your handling code here:
+        if(!utilidades.validarCorreo(txtCorreoRecuperacion.getText())){
+            JOptionPane.showMessageDialog(this, "El correo ingresado no es Correcto", "ERROR", JOptionPane.ERROR_MESSAGE);
+            txtCorreoRecuperacion.requestFocus();
+        }
+    }//GEN-LAST:event_txtCorreoRecuperacionFocusLost
+
 //------------------------------------------------------------------------------------------------------------------------------------------------------
     //METODOS PARA GESTIONAR EL PROYECTO
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    //METODO PARA LIMPIAR LOS CAMPOS
     public void LimpiarCampos(){
         txtNombreSitioWeb.setText("");
         txtDireccionSitioWeb.setText("");
         txtUsuario.setText("");
         txtContraseña.setText("");
         txtCorreoRecuperacion.setText("");
-        txtFechaRegistro.setText("");
-        
-    }
+        //txtFechaRegistro.setText("");
+    }//FIN LIMIPAR CAMPOS
     void actualizarTablaRegistros(){
         List<Usuarios> tablaActualizadaInventarios = controladorUsuariosContraseña.obtenerRegistros();
         modelTableContraseñas.setUsuarios(tablaActualizadaInventarios);
         modelTableContraseñas.fireTableDataChanged();
     }
-    
+    //METODO PARA GUARDAR UN REGISTRO
     public void GuardarContraseñas(){
         Usuarios guardarUsuarios = contraseñasgestion.guardarContraseñas(true);
         
@@ -454,21 +466,31 @@ public class GestionarContraseñas extends javax.swing.JFrame implements Comunic
 
             }
         }
-    }
+    }//FIN GUARDAR
     
+    //METODO EDITAR UN REGISTRO
     public void EditarContraseñas(){
+        if(usuariosEditar == null){
+            JOptionPane.showMessageDialog(rootPane, "No hay un registro seleccionado para editar", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         Usuarios editarUsuarios = contraseñasgestion.guardarContraseñas(true);
         
         if(editarUsuarios != null){
             editarUsuarios.setIdUsuarios(usuariosEditar.getIdUsuarios());
+            System.out.println("1");
             if(controladorUsuariosContraseña.editarContraseña(editarUsuarios)){
                 JOptionPane.showMessageDialog(rootPane, "Editado Correctamente");
                 LimpiarCampos();
                 usuariosEditar = null;
                 actualizarTablaRegistros();
+                System.out.println("2");
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "No se puede editar el registro");
+                System.out.println("3");
             }
         }
-    }
+    }//FIN EDITAR
     
     public void AbrirLink(){
         Desktop enlace = Desktop.getDesktop();
@@ -480,7 +502,7 @@ public class GestionarContraseñas extends javax.swing.JFrame implements Comunic
         }
     }
     
-    //METODO PARA ELIMINAR UNA PERSONA.
+    //METODO PARA ELIMINAR UNA REGISTRO.
     public void EliminarUsuarios(){
         if(usuariosEditar != null){
             if(controladorUsuariosContraseña.EliminarRegistro(usuariosEditar)){
@@ -497,7 +519,7 @@ public class GestionarContraseñas extends javax.swing.JFrame implements Comunic
             actualizarTablaRegistros();
             LimpiarCampos();
             }
-    }
+    }//FIN ELIMINAR
     
     // </editor-fold>
 //------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -600,8 +622,8 @@ public class GestionarContraseñas extends javax.swing.JFrame implements Comunic
         }).start();
         contadorClick++;
         if(contadorClick == 2){
-            if(JOptionPane.showConfirmDialog(rootPane, "Se Ingresara al link, ¿Desea Continuar?",
-                    "Ingresar al Link", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+            if(JOptionPane.showConfirmDialog(rootPane, "Ud desea abrir el link, ¿Confirmar?",
+                    "Abrir Link", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
             AbrirLink();
             }
             contadorClick = 0;
